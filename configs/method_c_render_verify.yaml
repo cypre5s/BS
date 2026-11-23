@@ -1,0 +1,8 @@
+method: C
+font_size: 14
+font_paths:
+  - experiments/resources/NotoSansCJKsc-Regular.otf
+minimum_line_fraction: 0.65
+minimum_line_support: 0.95
+maximum_blank_ink_fraction: 0.002
+refine_blank_spans: true

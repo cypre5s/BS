@@ -1,0 +1,6 @@
+-r requirements.txt
+pytest>=8
+ruff>=0.9
+mypy>=1.15
+types-PyYAML
+python-Levenshtein>=0.26

@@ -1,0 +1,7 @@
+project: /path/to/BS
+source: /path/to/existing/xmod
+runtime: /path/to/pinned/omnidocbench/runtime
+python: /path/to/xiaomi/inference/python
+poll_seconds: 45
+stability_seconds: 30
+max_attempts: 3

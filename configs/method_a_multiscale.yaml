@@ -1,0 +1,4 @@
+medium_scale: 1.5
+high_scale: 2.0
+medium_max_visual_tokens: 2048
+high_max_visual_tokens: 4096

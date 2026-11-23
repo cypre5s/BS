@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xiaomi-training-free-bs"
+version = "0.1.0"
+description = "Training-free table recognition with reproducible paired evaluation"
+requires-python = ">=3.10"
+dependencies = ["Pillow>=10", "numpy>=1.26", "lxml>=5", "PyYAML>=6", "weasyprint==70.0", "PyMuPDF>=1.24"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.9", "mypy>=1.15", "types-PyYAML", "scipy>=1.12", "python-Levenshtein>=0.26"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"xiaomi_runtime._vendor" = ["LICENSE"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+extend-exclude = ["src/xiaomi_runtime/_vendor"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+check_untyped_defs = true
+follow_imports = "skip"
+exclude = ["_vendor"]
+

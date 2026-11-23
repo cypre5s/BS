@@ -1,0 +1,11 @@
+method: B
+name: VisualEvidenceReacquisition
+max_regions: 2
+padding: 4
+scale: 1.75
+boundary_margin: 12
+long_text_chars: 80
+dense_columns: 8
+minimum_anchor_fraction: 0.75
+maximum_changed_fraction: 0.25
+minimum_distinct_anchors: 2
