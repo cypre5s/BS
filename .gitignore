@@ -8,10 +8,12 @@
 !src/**/*.py
 !src/**/LICENSE
 !configs/*.yaml
+!configs/samr/*.yaml
 !scripts/*.py
 !tests/**/*.py
 !docs/**/*.md
 !reports/architecture/*.md
+!reports/samr/*.md
 !reports/development/code_validation_report.md
 .venv/
 __pycache__/
@@ -20,6 +22,7 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 configs/local*.yaml
+configs/samr/local*.yaml
 !configs/local.example.yaml
 experiments/
 reports/orchestration/

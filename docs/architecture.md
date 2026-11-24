@@ -1,5 +1,7 @@
 # Architecture
 
+The historical A/B/C architecture below remains unchanged. SAMR is a separate Method A upgrade under `src/samr`; its full design is in [the SAMR architecture report](../reports/samr/architecture_report.md). It reuses the same resident Xiaomi runtime, native processor and official serializer. Optional token and cooperative deadline guards preserve the original callers' default generation behavior. A1 creates full-image scale observations; A3 admits scales using image-only complexity and cumulative budgets; A2 aligns canonical occupied regions and permits only image-supported, text-preserving blank-span repairs. The development entry point is restricted to small inputs isolated from the frozen 665-table cohort.
+
 `xiaomi_runtime` owns the original BF16 model, processor, tokenizer, generation settings and official OTSL serializer. Loading is lazy and requires a permission callback from the completion gate. The same runtime instance is injected into all methods. The CPU test environment can import the interface without loading Torch or opening CUDA.
 
 `multiview`, `reacquisition` and `render_verify` implement independent methods through `run(table_id, image, baseline)`. Methods receive original image pixels and cached B0 output. Ground-truth HTML and official metric records enter the separate scoring subprocess after generation is complete. The methods return the chosen prediction, their additional model calls, a decision reason and diagnostics.

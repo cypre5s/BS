@@ -1,6 +1,10 @@
 # Xiaomi-OCR-0 Training-Free Inference
 
-This project evaluates three independent inference methods on the frozen 665-table OmniDocBench cohort used by an existing Xiaomi-OCR-0 experiment. One original BF16 model serves all additional inference calls.
+This project provides training-free table inference with one frozen original Xiaomi-OCR-0 BF16 model. The existing A/B/C methods and their historical 665-table experiment remain available. SAMR adds a separate structure-aware multi-resolution upgrade to Method A; SAMR has not undergone a formal full OmniDocBench evaluation.
+
+SAMR combines A1 full-image scale profiling, A2 global-anchored canonical-grid fusion, and A3 image-complexity resource routing. It does not train, modify weights, consume ground-truth routing features or select longer outputs. The default adaptive path runs global only for LOW complexity, global + 1.5 for MEDIUM, and global + 1.5 + 1.75 for HIGH. Uncertain evidence retains B0. The current repair policy is limited to image-supported splits of blank merged cells.
+
+See [SAMR smoke and development commands](docs/smoke_test.md), [architecture](reports/samr/architecture_report.md), [Q1–Q16 evidence](reports/samr/test_report.md), and [budget semantics](reports/samr/complexity_routing_report.md). Visual-token budgets are enforced before generation; latency uses cooperative decoding stops and can overshoot during a nonpreemptible GPU operation. Smoke success is not evidence of improved accuracy.
 
 | Method | Evidence used | Acceptance rule |
 | --- | --- | --- |
@@ -23,4 +27,4 @@ python scripts/launch_after_b2_b3.py --config configs/local.yaml
 python scripts/resume_evaluation.py --config configs/local.yaml
 ```
 
-The scientific protocol is described in `docs/evaluation_protocol.md`. `docs/code_audit.md` maps Q1–Q12 to executable evidence. The methods are hypotheses pending paired evaluation.
+The historical scientific protocol is described in `docs/evaluation_protocol.md`. `docs/code_audit.md` maps its Q1–Q12 to executable evidence. Historical A/B/C evaluations and the new SAMR smoke validation are separate records; SAMR accuracy gains remain unestablished.

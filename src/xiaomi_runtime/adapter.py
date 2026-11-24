@@ -10,6 +10,7 @@ from typing import Any, Protocol
 
 from PIL import Image
 
+from .budget import BudgetExceeded, check_deadline
 from .inference import generate
 from .otsl import to_html
 from .processor import TABLE_PROMPT, ProcessorLimits, encode_prompt, view_image
@@ -155,9 +156,12 @@ class XiaomiRuntime:
         self.load_count += 1
 
     def infer(self, table_id: str, image: Image.Image, *, method: str,
-              view_type: str, resolution: tuple[int, int] | None = None) -> Prediction:
+              view_type: str, resolution: tuple[int, int] | None = None,
+              max_visual_tokens: int | None = None, deadline: float | None = None) -> Prediction:
         self.permission_check()
+        check_deadline(deadline)
         self._load()
+        check_deadline(deadline)
         started = perf_counter()
         limits = ProcessorLimits.from_processor(self.processor)
         prepared = view_image(image, resolution, limits)
@@ -173,9 +177,13 @@ class XiaomiRuntime:
             raise ValueError("Image placeholders differ from native grid token count")
         if visual_tokens > limits.max_visual_tokens:
             raise ValueError("Native image grid exceeds the pinned processor pixel budget")
+        if max_visual_tokens is not None and visual_tokens > max_visual_tokens:
+            raise BudgetExceeded("Actual native visual tokens exceed the remaining table budget")
+        check_deadline(deadline)
         self.call_count += 1
         try:
-            output, eos = generate(self.model, inputs)
+            output, eos = (generate(self.model, inputs) if deadline is None
+                           else generate(self.model, inputs, deadline=deadline))
             raw = self.processor.tokenizer.decode(
                 output, skip_special_tokens=True, clean_up_tokenization_spaces=False
             ).strip()
@@ -184,6 +192,7 @@ class XiaomiRuntime:
                 input_size=image.size, processed_size=(width * limits.patch_size, height * limits.patch_size),
                 image_grid_thw=grid, visual_tokens=visual_tokens, output_tokens=int(output.numel()),
                 latency=perf_counter() - started, eos=eos, truncated=not eos, output_hash=text_hash(raw),
+                error="deadline_exceeded" if deadline is not None and perf_counter() >= deadline else None,
             )
         except BaseException as error:
             self._log_call({"table_id": table_id, "method": method, "view_type": view_type,
