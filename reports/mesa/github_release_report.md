@@ -8,4 +8,6 @@ Preflight staged-content and full-history scans pass. The scanner checks allowli
 
 Local preservation checks confirm 8,107 historical artifact files and 677 paused A2++ files unchanged, plus all 121 pre-existing tracked files outside the three intended integration edits. Original B0 prediction-pair bytes match the frozen formal SAMR manifest.
 
-Final commit and remote verification will be recorded after successful upload. This interim document does not assert that publication has occurred.
+Implementation commit [`f3662d02f6d8e7cd8457f367bf8de12bb95d9fcf`](https://github.com/cypre5s/BS/commit/f3662d02f6d8e7cd8457f367bf8de12bb95d9fcf) was successfully pushed to `origin/main`. `git ls-remote origin refs/heads/main` returned that exact hash. This report update is a documentation-only descendant; no force push or history rewrite is used.
+
+Validation at release: 292 CPU tests passed, one existing skip; Ruff/Mypy/import/configuration checks passed; all 42 real development views parsed successfully through all five channels on a single original model. One additional native B0 replay matched exactly. All six pinned weight/processor/tokenizer hashes remained unchanged. No formal benchmark inference or scoring was run.
