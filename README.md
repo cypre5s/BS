@@ -1,6 +1,8 @@
 # Xiaomi-OCR-0 Training-Free Inference
 
-This project provides training-free table inference with one frozen original Xiaomi-OCR-0 BF16 model. The existing A/B/C methods and their historical 665-table experiment remain available. SAMR adds a separate structure-aware multi-resolution upgrade to Method A; SAMR has not undergone a formal full OmniDocBench evaluation.
+This project provides training-free table inference with one frozen original Xiaomi-OCR-0 BF16 model. The existing A/B/C methods and their historical 665-table experiment remain available. SAMR adds a separate structure-aware multi-resolution upgrade to Method A. Its completed local 665-table experiment retained B0 on every table and established no accuracy gain.
+
+MESA (Multi-Scale Evidence Aggregation for Table Recognition) adds an independent five-channel engine under `src/mesa/`: original global, global high resolution, horizontal detail, vertical detail and overlapping tiles. All observations use the original native processor and one resident BF16 runtime. Local evidence requires image-based spatial mapping; unresolved mappings retain the global anchor. See [MESA development commands](docs/mesa/reproduction.md), [architecture](reports/mesa/architecture.md), and [validation evidence](reports/mesa/smoke_test_report.md). This release implements infrastructure and development smoke tests; it does not run a new 665-table evaluation or claim an accuracy improvement.
 
 SAMR combines A1 full-image scale profiling, A2 global-anchored canonical-grid fusion, and A3 image-complexity resource routing. It does not train, modify weights, consume ground-truth routing features or select longer outputs. The default adaptive path runs global only for LOW complexity, global + 1.5 for MEDIUM, and global + 1.5 + 1.75 for HIGH. Uncertain evidence retains B0. The current repair policy is limited to image-supported splits of blank merged cells.
 

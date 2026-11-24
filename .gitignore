@@ -9,11 +9,14 @@
 !src/**/LICENSE
 !configs/*.yaml
 !configs/samr/*.yaml
+!configs/mesa/*.yaml
+!scripts/mesa/*.py
 !scripts/*.py
 !tests/**/*.py
 !docs/**/*.md
 !reports/architecture/*.md
 !reports/samr/*.md
+!reports/mesa/*.md
 !reports/development/code_validation_report.md
 .venv/
 __pycache__/

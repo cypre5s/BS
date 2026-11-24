@@ -27,12 +27,12 @@ def allowed(path: str) -> bool:
         return True
     if item.parent == Path("configs") and item.suffix == ".yaml" and (not item.name.startswith("local") or item.name == "local.example.yaml"):
         return True
-    if item.parent == Path("configs/samr") and item.suffix == ".yaml" and not item.name.startswith("local"):
+    if item.parent in {Path("configs/samr"), Path("configs/mesa")} and item.suffix == ".yaml" and not item.name.startswith("local"):
         return True
     if item.parts[0] == "docs" and item.suffix == ".md":
         return True
     return path == "reports/development/code_validation_report.md" or (
-        item.parent in {Path("reports/architecture"), Path("reports/samr")} and item.suffix == ".md")
+        item.parent in {Path("reports/architecture"), Path("reports/samr"), Path("reports/mesa")} and item.suffix == ".md")
 
 
 def content_issues(path: str, data: bytes) -> list[str]:

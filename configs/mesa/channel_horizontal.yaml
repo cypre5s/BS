@@ -1,0 +1,28 @@
+model_hash: d4551e9f6127ac9e35cff7b4f7a72a90410e03e6c8676a36f0e2b7eaeb5d5348
+processor_config_hash: d89ef49ce9cd37fbf510158e13c1ef063d9286411c1ec9049932dbe0487143b1
+prompt_hash: 68a61d87c6a13273c33c22e62d37bf28b1787dc20f8da681ca8b68a0c3fa03a5
+generation_config_hash: cf5cc8c31a61eee2d175bf8330f243189d46465178e7d362c398dc37c25932f3
+channels:
+- global
+- horizontal
+skip_channels: []
+scales:
+- 1.25
+- 1.5
+- 1.75
+overlap: 0.2
+padding: 4
+detail_scale: 1.5
+strips: 2
+header_fraction: 0.15
+tile_grid: adaptive
+density_threshold: 0.15
+dense_image_area: 1000000
+fusion: false
+max_views_per_table: 17
+max_visual_tokens_per_view: 8192
+max_total_visual_tokens: 32768
+max_latency_per_table: 240.0
+max_tiles_per_table: 9
+max_attempts_per_view: 2
+boundary_tolerance: 5.0
