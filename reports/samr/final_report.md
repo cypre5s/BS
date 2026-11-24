@@ -38,3 +38,7 @@ documentation distinguish SAMR from historical experiments.
 Publication is source/configuration/sanitized Markdown only. Data, model files, images,
 raw predictions, local receipts, caches and secrets remain excluded. The actual pushed
 commit and clean-tree verification are recorded in `git_release_report.md`.
+
+The tested implementation was pushed to existing `main` as
+[`b510cbc7ba4ae1f1470ad1e2e78ff0944ee8fd2f`](https://github.com/cypre5s/BS/commit/b510cbc7ba4ae1f1470ad1e2e78ff0944ee8fd2f).
+The subsequent documentation commit records the completed release checks.
