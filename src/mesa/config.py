@@ -31,8 +31,38 @@ class MESAConfig:
     max_tiles_per_table: int = 9
     max_attempts_per_view: int = 2
     boundary_tolerance: float = 5.0
+    vertical_segmentation_mode: str = "header_preserved"
+    vertical_overlap_rows: int = 2
+    header_context: bool = True
+    max_vertical_views: int = 3
+    grid_aware_crops: bool = True
+    grid_min_confidence: float = 0.72
+    grid_min_frame_support: float = 0.60
+    grid_gap_pixels: int = 5
+    grid_merge_distance: int = 4
+    grid_min_line_fraction: float = 0.25
+    grid_max_line_thickness: int = 8
+    snap_max_distance: int = 64
+    max_header_rows: int = 3
+    header_max_fraction: float = 0.35
+    seam_gap: int = 4
 
     def __post_init__(self):
+        if self.vertical_segmentation_mode not in {"fixed_overlap", "grid_aligned", "header_preserved"}:
+            raise ValueError("Unknown vertical segmentation mode")
+        for key in ("vertical_overlap_rows", "grid_gap_pixels", "seam_gap", "grid_merge_distance"):
+            if type(getattr(self, key)) is not int or getattr(self, key) < 0:
+                raise ValueError("Invalid nonnegative integer: " + key)
+        for key in ("max_vertical_views", "grid_max_line_thickness", "snap_max_distance", "max_header_rows"):
+            if type(getattr(self, key)) is not int or getattr(self, key) < 1:
+                raise ValueError("Invalid positive integer: " + key)
+        if self.max_vertical_views > 3 or self.max_header_rows > 4:
+            raise ValueError("Unbounded segmentation")
+        if any(type(getattr(self, k)) is not bool for k in ("header_context", "grid_aware_crops")):
+            raise ValueError("Context and grid flags must be booleans")
+        for value in (self.grid_min_confidence, self.grid_min_line_fraction, self.header_max_fraction, self.grid_min_frame_support):
+            if type(value) not in (int, float) or not isfinite(value) or not 0 < value <= 1:
+                raise ValueError("Invalid grid/header confidence setting")
         if (not self.channels or len(set(self.channels)) != len(self.channels)
                 or any(c not in CHANNELS for c in (*self.channels, *self.skip_channels))):
             raise ValueError("Unknown or repeated channel")

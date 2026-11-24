@@ -1,5 +1,7 @@
 # MESA development reproduction
 
+For the current grid-aware implementation, see [MESA v2 reproduction](v2_reproduction.md) and [v2 validation](../../reports/mesa_v2/smoke_test_report.md). Earlier v1 experiment directories are historical evidence and must not be reused for v2 outputs.
+
 Run from the BS repository using the existing CPU development environment:
 
 ```bash
@@ -16,7 +18,7 @@ The GPU interpreter must contain the existing pinned Xiaomi runtime dependencies
   --manifest experiments/samr/development_manifest.json \
   --exclude-manifest experiments/samr/exclusion.json \
   --config configs/mesa/mesa_fusion.yaml \
-  --output experiments/mesa/real_gpu_v1 \
+  --output experiments/mesa_v2/development_run \
   --gpu-lock ../runs/xmod/.run_all.lock
 ```
 

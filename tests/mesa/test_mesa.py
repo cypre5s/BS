@@ -69,11 +69,12 @@ def test_views_roundtrip_overlap_and_native_metadata():
             for point in ((x0, y0), (x1, y1), ((x0+x1)/2, (y0+y1)/2)):
                 assert view.to_original(view.from_original(point, processed=processed), processed=processed) == pytest.approx(point)
         scale = view.plan.applied_scale
-        assert abs(view.plan.actual_size[0] - (x1-x0)*scale) <= .5
-        assert abs(view.plan.actual_size[1] - (y1-y0)*scale) <= .5
+        assert abs(view.plan.actual_size[0] - view.plan.original_size[0]*scale) <= .5
+        assert abs(view.plan.actual_size[1] - view.plan.original_size[1]*scale) <= .5
     strips = [v for v in views if v.channel_id == 'horizontal']
     assert strips[0].crop_box[2] > strips[1].crop_box[0]
-    assert all(v.crop_box[1] == 0 for v in views if v.channel_id == 'vertical')
+    assert all(v.pieces[0].source_bbox[1] == 0 for v in views if v.channel_id == 'vertical')
+    assert any(v.crop_box[1] > 0 for v in views if v.channel_id == 'vertical')
     tiles = [v for v in views if v.channel_id == 'tiles']
     assert tiles[0].crop_box[2] > tiles[1].crop_box[0]
 
@@ -148,7 +149,7 @@ def test_canonical_spans_blank_and_empty_rows():
 def test_spatial_mapping_different_dimensions_and_split_span():
     image=Image.new('RGB',(200,200))
     view=VisualViewGenerator(MESAConfig(channels=('horizontal',),padding=0)).generate(image,'i')[1]
-    view=replace(view,crop_box=(0,0,100,200))
+    view=replace(view,crop_box=(0,0,100,200),mapping_quality='HIGH')
     global_grid=CanonicalGrid.from_otsl(RAW,'global','g')
     local=CanonicalGrid.from_otsl('<fcel>A<nl><fcel>C<nl>','horizontal','h')
     geometry=GridGeometry((0.,100.,200.),(0.,100.,200.),True,'synthetic')

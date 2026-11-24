@@ -13,6 +13,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from mesa.config import CHANNELS, MESAConfig
+from mesa.diagnostics import diagnose
 from mesa.engine import MESAInferenceEngine
 from orchestration.storage import atomic_json, file_hash, read_json
 from render_verify.structural_checker import inspect_html
@@ -52,7 +53,7 @@ def main():
         runtime._load()
         setup_seconds = perf_counter() - setup
         engine = MESAInferenceEngine(runtime, config, args.output / "tables")
-        receipts, rows, parity = [], [], None
+        receipts, rows, parity, diagnostics = [], [], None, []
         try:
             for table_id, path, digest in inputs:
                 if file_hash(path) != digest:
@@ -63,9 +64,11 @@ def main():
                 receipts.append(result)
                 from xiaomi_runtime.adapter import text_hash
                 folder = args.output / "tables" / text_hash(table_id)
+                predictions = {}
                 for rel in result["cache_files"]:
                     record = read_json(folder / rel)
                     p, view = record["prediction"], record["view"]
+                    predictions[view['view_id']] = Prediction(**p)
                     valid, error = True, None
                     try:
                         parse_table(p["raw"])
@@ -83,6 +86,8 @@ def main():
                         original = replace(original, input_size=tuple(original.input_size),
                                            processed_size=tuple(original.processed_size))
                         parity = replay_baseline(runtime, image, original)
+                diagnostics.append(diagnose(image,table_id,predictions,config))
+                atomic_json(args.output/'diagnostics'/f'{text_hash(table_id)}.json',diagnostics[-1])
                 print(json.dumps({"table_id": table_id, "views": len(result["cache_files"]),
                                   "reason": result["fusion"]["reason"], "budget": result["budget"]}), flush=True)
         finally:
@@ -100,9 +105,10 @@ def main():
                    "model_load_count": runtime.load_count, "native_B0_parity": parity,
                    "config": config.as_dict(), "manifest_sha256": file_hash(args.manifest),
                    "exclusion_sha256": file_hash(args.exclude_manifest), "formal_665_evaluation": False,
+                   "diagnostics": diagnostics,
                    "accuracy_claim": None}
         atomic_json(args.output / "summary.json", summary)
-        print(json.dumps({key: value for key, value in summary.items() if key != "profile"}), flush=True)
+        print(json.dumps({key: value for key, value in summary.items() if key not in ("profile", "diagnostics")}), flush=True)
         if not passed:
             raise SystemExit("MESA smoke did not pass; inspect the retained audit")
 

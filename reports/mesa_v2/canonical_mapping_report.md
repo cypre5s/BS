@@ -1,0 +1,11 @@
+# Piecewise canonical mapping and conservative fusion
+
+OTSL still uses the pinned Xiaomi parser through the original strict canonical wrapper. No cell-index matching is introduced. Source-image rule coordinates must match the global lattice dimensions before local mapping is allowed. Proportional LOW-quality crops are explicitly UNRESOLVED for modifications.
+
+Ordinary crops map to complete rows and columns. Header-preserved views use an explicit piecewise row map, such as header row 0 followed by data rows 8–12; a local row index is a lattice coordinate, not an ordinal cell index. Each piece's bounds are rechecked against the detected image rules. Duplicate/reordered row IDs, dimension disagreement, a global merged cell crossing the crop boundary, or a local rowspan crossing the discontinuous header/data seam are rejected. Blank slots and spans retain their original two-dimensional ownership.
+
+Overlap is corroboration, not voting. Mapped local helpers must contain at least two actual local unchanged text anchors; copied global cells outside the crop do not count. Conflicting topology or text in the same overlapping original positions vetoes both local helpers. Fusion still uses the existing image-supported blank-span repair primitive and preserves global text. No acceptance threshold is relaxed. Each view's audit records table/channel/crop identity, original/snapped boxes, mapped cells, mapping quality, accepted flag and rejection reason.
+
+Evidence: 24 OTSL mapping cases include fcel/ecel/lcel/ucel/xcel/nl, blank cells and row/column spans; separate tests reject partial rows and seam-crossing spans. The existing partial-column test remains. Thirty-six varying crop/scale/padding cases check all corners, interior, padding and processed coordinates to absolute tolerance 1e-9. The independent geometric audit verified 3,168 mapped cell coordinates against the row/column values encoded in synthetic fixture text, with 3,168 correct.
+
+The 100% synthetic coordinate result is not a real recognition accuracy measurement. Real development images have no independently annotated cell coordinates in this run; their canonical mapping accuracy is therefore reported as unavailable, separately from the measurable mapping success/UNRESOLVED rates. A MAPPED status is not evidence that OCR content or inferred structure is correct.
