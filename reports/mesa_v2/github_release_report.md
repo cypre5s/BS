@@ -16,4 +16,10 @@ Preservation checks verified 4,843 files from the v2 baseline manifest, with the
 
 ## Release verification
 
-Commit and remote verification are recorded after the final validated upload.
+Implementation commit: [48d8041e0952ff1b5d2563d140dcd63841804902](https://github.com/cypre5s/BS/commit/48d8041e0952ff1b5d2563d140dcd63841804902), containing 27 changed source/configuration/test/documentation files. Ordinary `git push origin HEAD:main` succeeded. An independent `git ls-remote origin refs/heads/main` returned that exact hash. Local main was then advanced with `git merge --ff-only mesa-v2`; both worktrees reported clean status and local main matched origin/main.
+
+The scan of the committed implementation checked **187 reachable historical path/blob pairs**, with zero findings. The diff against e743c68 passes whitespace checks and every changed path is within the requested MESA directories. There are no tracked A2++ files, datasets, model assets or actual predictions in this release. The later documentation-only commit records this publication evidence and is scanned and verified before final delivery; the implementation above is unchanged by that record.
+
+Validation: **375 CPU tests passed, 2 environment-dependent tests skipped**, including 113 passing MESA cases; Ruff and Mypy pass. The final real GPU smoke passes **3 images / 43 completed views**, plus an independent native B0 replay (44 model calls total), with one frozen BF16 load and six unchanged pinned file hashes. Detailed diagnostics and limitations are in [the validation report](smoke_test_report.md). No formal 665-table evaluation or training was run.
+
+The local final-delivery receipt records the exact documentation-release hash, independently observed remote main hash, both worktree statuses, publication scan and retained evidence hashes. All six required reports are committed. Historical experiment evidence remains outside Git.
